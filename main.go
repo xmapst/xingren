@@ -162,23 +162,21 @@ func main() {
 		detail := module.Detail{
 			DoctorID: i,
 		}
-		if ok, _ := detail.Exists(); ok {
-			if err := detail.SearchDoctorId(); err != nil {
-				log.Print(err)
-			} else {
+		if err := detail.SearchDoctorId(); err != nil {
+			log.Print(err)
+		} else {
 
-				// 爬取对应的文章页面
-				err = documentCollector.Visit(fmt.Sprintf(documentUrl, detail.ID))
-				if err != nil {
-					log.Println(err)
-				}
-				// 爬取对应的坐诊页面
-				err = clinicCollector.Visit(fmt.Sprintf(clinicUrl, detail.ID))
-				if err != nil {
-					log.Println(err)
-				}
-				continue
+			// 爬取对应的文章页面
+			err = documentCollector.Visit(fmt.Sprintf(documentUrl, detail.ID))
+			if err != nil {
+				log.Println(err)
 			}
+			// 爬取对应的坐诊页面
+			err = clinicCollector.Visit(fmt.Sprintf(clinicUrl, detail.ID))
+			if err != nil {
+				log.Println(err)
+			}
+			continue
 		}
 
 		err := detailCollector.Visit(fmt.Sprintf(detailUrl, i))
