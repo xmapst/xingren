@@ -1,9 +1,9 @@
 package persist
 
 import (
+	"log"
 	"xingren/model"
 	"xingren/module"
-	"log"
 )
 
 var (

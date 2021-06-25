@@ -3,12 +3,12 @@ package parser
 import (
 	"bytes"
 	"errors"
-	"xingren/model"
-	"xingren/utils"
 	"github.com/PuerkitoBio/goquery"
 	"regexp"
 	"strconv"
 	"strings"
+	"xingren/model"
+	"xingren/utils"
 )
 
 // 解析详情页

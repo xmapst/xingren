@@ -2,9 +2,9 @@ package module
 
 import (
 	"errors"
+	"fmt"
 	"xingren/model"
 	"xingren/utils"
-	"fmt"
 )
 
 type Clinic struct {

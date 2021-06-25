@@ -46,7 +46,7 @@ func StructToMapFilterFields(objPtr interface{}, fileds []string) (map[string]in
 	return res, nil
 }
 
-// StructToMap struct转map，先找struct的gorm的column的tag，没有就找json的，在没有就获取字段名称作为key
+// StructTMap struct转map，先找struct的gorm的column的tag，没有就找json的，在没有就获取字段名称作为key
 func StructTMap(objPtr interface{}) (map[string]interface{}, error) {
 	reflectObjType := reflect.TypeOf(objPtr)
 	if reflectObjType.Kind() != reflect.Ptr {
@@ -91,7 +91,7 @@ func StructTMap(objPtr interface{}) (map[string]interface{}, error) {
 	return res, nil
 }
 
-// GormNumberColumnToAllName 获取所有的number 类型的 gorm的名称
+// GormNumberColumntoAllName 获取所有的number 类型的 gorm的名称
 func GormNumberColumntoAllName(objPtr interface{}) ([]string, error) {
 	reflectObjType := reflect.TypeOf(objPtr)
 	if reflectObjType.Kind() != reflect.Ptr {
@@ -145,7 +145,7 @@ func ReflectKindCheckNumber(kind reflect.Kind) bool {
 	return false
 }
 
-// GormColumnToAllNmae 获取所有gorm的名称
+// GormColumnToAllName 获取所有gorm的名称
 func GormColumnToAllName(objPtr interface{}) ([]string, error) {
 	reflectObjType := reflect.TypeOf(objPtr)
 	if reflectObjType.Kind() != reflect.Ptr {
@@ -174,6 +174,7 @@ func GormColumnToAllName(objPtr interface{}) ([]string, error) {
 	return res, nil
 }
 
+// MapFullStruct
 //用map的转存到 struct
 //支持 bool、int、int8、int16、int32、int64、uint、uint8、uint16、uint32、uint64、float32、float64、time.Time、string、struct和这些类型与slice或者ptr得组合类型
 //map得key支持 orm和gorm tag中得column得名称、json tag中得名称、struct中得名字
@@ -184,10 +185,10 @@ func MapFullStruct(data map[string]interface{}, objPtr interface{}) error {
 		structValue = structValue.Elem() //获取指针下得值
 		structType = structType.Elem()   //获取指针下得值
 	} else {
-		return errors.New("Check type error not *Struct")
+		return errors.New("check type error not *Struct")
 	}
 	if structType.Kind() != reflect.Struct {
-		return errors.New("Check type error not Struct")
+		return errors.New("check type error not Struct")
 	}
 
 	// 存储struct name 转换小写的 name 对应的 index
@@ -415,6 +416,7 @@ where := []interface{}{
     []interface{}{"username = ? or nickname = ?", "xmapst", "jun"},
 }
 */
+
 // BuildWhere 构建where条件
 func BuildWhere(db *gorm.DB, where interface{}) (*gorm.DB, error) {
 	var err error

@@ -2,9 +2,9 @@ package module
 
 import (
 	"errors"
+	"fmt"
 	"xingren/model"
 	"xingren/utils"
-	"fmt"
 )
 
 type Detail struct {
@@ -148,7 +148,7 @@ func (d *Detail) CreateOrUpdate() error {
 	if err != nil {
 		return err
 	}
-	
+
 	where := map[string]interface{}{"id": d.ID}
 	if err := model.UpSetData(detail, where, updateField, true); err != nil {
 		return errors.New("detail update failed")

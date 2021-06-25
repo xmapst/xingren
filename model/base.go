@@ -1,11 +1,11 @@
 package model
 
 import (
-	"xingren/utils"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"reflect"
 	"time"
+	"xingren/utils"
 )
 
 var DB *gorm.DB
