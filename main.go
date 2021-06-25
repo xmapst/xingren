@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/gocolly/colly"
 	"xingren/model"
+	"xingren/module"
 	"xingren/parser"
 	"xingren/persist"
 	"xingren/proxypool"
@@ -56,7 +57,7 @@ func main() {
 	})
 
 	// 控制并发数量
-	err := detailCollector.Limit(&colly.LimitRule{DomainGlob: "*", Parallelism: 300})
+	err := detailCollector.Limit(&colly.LimitRule{DomainGlob: "*", Parallelism: 600})
 	if err != nil {
 		log.Panic(err)
 	}
@@ -156,7 +157,28 @@ func main() {
 	})
 
 	// 添加爬虫队列
-	for i := 1; i <= 500000; i++ {
+	var i int64
+	for i = 1; i <= 500000; i++ {
+		detail := module.Detail{
+			DoctorID: i,
+		}
+		if err := detail.SearchDoctorId(); err != nil {
+			log.Print(err)
+		} else {
+
+			// 爬取对应的文章页面
+			err = documentCollector.Visit(fmt.Sprintf(documentUrl, detail.ID))
+			if err != nil {
+				log.Println(err)
+			}
+			// 爬取对应的坐诊页面
+			err = clinicCollector.Visit(fmt.Sprintf(clinicUrl, detail.ID))
+			if err != nil {
+				log.Println(err)
+			}
+			continue
+		}
+
 		err := detailCollector.Visit(fmt.Sprintf(detailUrl, i))
 		if err != nil {
 			log.Println(err)

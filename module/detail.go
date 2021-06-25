@@ -29,9 +29,9 @@ func ListByIds(queuesIds []int64) ([]Detail, error) {
 	return s.List(queuesIds, "", 0, 999)
 }
 
-func (d *Detail) List(detailIds []int64, keysord string, page, pageSize int64) ([]Detail, error) {
+func (d *Detail) List(detailIds []int64, keyword string, page, pageSize int64) ([]Detail, error) {
 	list := make([]*model.Detail, pageSize)
-	if err := model.SelectData(&list, d.parseWhereConds(detailIds, keysord), page, pageSize, "", ""); err != nil {
+	if err := model.SelectData(&list, d.parseWhereCond(detailIds, keyword), page, pageSize, "", ""); err != nil {
 		return nil, errors.New("get detail list failed")
 	}
 	var detailSlice []Detail
@@ -57,7 +57,7 @@ func (d *Detail) List(detailIds []int64, keysord string, page, pageSize int64) (
 }
 
 func (d *Detail) Total(detailIds []int64, keyword string) (int64, error) {
-	total, err := model.Total(&model.Detail{}, d.parseWhereConds(detailIds, keyword))
+	total, err := model.Total(&model.Detail{}, d.parseWhereCond(detailIds, keyword))
 	if err != nil {
 		return 0, fmt.Errorf("get detail list count failed, %q", err)
 	}
@@ -78,12 +78,11 @@ func (d *Detail) Exists() (bool, error) {
 	if len(where) == 0 {
 		return false, errors.New("no data found")
 	}
-	conut, err := model.Total(&model.Detail{}, where)
+	count, err := model.Total(&model.Detail{}, where)
 	if err != nil {
 		return false, err
 	}
-
-	return conut > 0, nil
+	return count > 0, nil
 }
 
 func (d *Detail) Delete() error {
@@ -180,7 +179,20 @@ func (d *Detail) SearchName() error {
 	return nil
 }
 
-func (d *Detail) parseWhereConds(queuesIds []int64, keyword string) []interface{} {
+func (d *Detail) SearchDoctorId() error {
+	detail := &model.Detail{}
+	where := model.Detail{DoctorID: d.DoctorID}
+	if err := model.SelectOne(detail, where); err != nil {
+		return errors.New("detail does not exist")
+	}
+	if detail.ID == 0 {
+		return errors.New("detail does not exist")
+	}
+	d.ID = detail.ID
+	return nil
+}
+
+func (d *Detail) parseWhereCond(queuesIds []int64, keyword string) []interface{} {
 	var where []interface{}
 	if keyword != "" {
 		where = append(where, []interface{}{"name", "LIKE", fmt.Sprintf("%%%s%%", keyword)})
